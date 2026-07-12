@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="container narrow">
+  <h1><%= blog && blog._id ? 'Edit post' : 'New post' %></h1>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <form
+    action="<%= blog && blog._id ? '/blogs/' + blog._id + '?_method=PUT' : '/blogs' %>"
+    method="POST"
+    enctype="multipart/form-data"
+    class="form"
+  >
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" value="<%= blog ? blog.title : '' %>" required />
+
+    <label for="content">Content</label>
+    <textarea id="content" name="content" rows="10" required><%= blog ? blog.content : '' %></textarea>
+
+    <label for="tags">Tags <span class="hint">(comma separated)</span></label>
+    <input type="text" id="tags" name="tags" value="<%= blog && blog.tags ? blog.tags.join(', ') : '' %>" placeholder="nodejs, mongodb, jwt" />
+
+    <label for="coverImage">Cover image <span class="hint">(optional, jpg/png/webp/gif, max 5MB)</span></label>
+    <input type="file" id="coverImage" name="coverImage" accept="image/*" />
+
+    <% if (blog && blog.coverImage) { %>
+      <p class="hint">Current image will be kept unless you upload a new one.</p>
+      <img src="<%= blog.coverImage %>" alt="current cover" class="current-cover-preview" />
+    <% } %>
+
+    <button type="submit" class="btn"><%= blog && blog._id ? 'Save changes' : 'Publish post' %></button>
+  </form>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,42 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="container narrow">
+  <article class="blog-detail">
+    <% if (blog.coverImage) { %>
+      <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="blog-detail-img" />
+    <% } %>
+
+    <h1><%= blog.title %></h1>
+    <p class="blog-meta">
+      by <%= blog.author ? blog.author.name : 'Unknown' %> ·
+      <%= new Date(blog.createdAt).toLocaleDateString() %>
+    </p>
+
+    <% if (blog.tags && blog.tags.length) { %>
+      <div class="tag-list">
+        <% blog.tags.forEach(function(tag) { %>
+          <span class="tag"><%= tag %></span>
+        <% }) %>
+      </div>
+    <% } %>
+
+    <div class="blog-content">
+      <p><%= blog.content %></p>
+    </div>
+
+    <% if (currentUser && blog.author && currentUser._id.toString() === blog.author._id.toString()) { %>
+      <div class="blog-actions">
+        <a href="/blogs/<%= blog._id %>/edit" class="btn-small">Edit</a>
+        <form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST" class="inline-form"
+              onsubmit="return confirm('Delete this post? This cannot be undone.');">
+          <button type="submit" class="link-button danger">Delete</button>
+        </form>
+      </div>
+    <% } %>
+
+    <a href="/" class="back-link">← Back to all posts</a>
+  </article>
+</main>
+
+<%- include('partials/footer') %>

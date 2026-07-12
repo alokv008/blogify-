@@ -1,0 +1,52 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <section class="hero">
+    <h1>Welcome to Blogify</h1>
+    <p>Read what people are writing about, or start your own post.</p>
+  </section>
+
+  <% if (blogs.length === 0) { %>
+    <p class="empty-state">No posts yet. Be the first to <a href="/register">sign up</a> and write one!</p>
+  <% } else { %>
+    <div class="blog-grid">
+      <% blogs.forEach(function(blog) { %>
+        <article class="blog-card">
+          <% if (blog.coverImage) { %>
+            <a href="/blogs/<%= blog._id %>">
+              <img src="<%= blog.coverImage %>" alt="<%= blog.title %>" class="blog-card-img" />
+            </a>
+          <% } %>
+          <div class="blog-card-body">
+            <h2><a href="/blogs/<%= blog._id %>"><%= blog.title %></a></h2>
+            <p class="blog-meta">
+              by <%= blog.author ? blog.author.name : 'Unknown' %> ·
+              <%= new Date(blog.createdAt).toLocaleDateString() %>
+            </p>
+            <p class="blog-excerpt"><%= blog.content.slice(0, 120) %><%= blog.content.length > 120 ? '…' : '' %></p>
+            <% if (blog.tags && blog.tags.length) { %>
+              <div class="tag-list">
+                <% blog.tags.forEach(function(tag) { %>
+                  <span class="tag"><%= tag %></span>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+
+    <div class="pagination">
+      <% if (page > 1) { %>
+        <a href="/?page=<%= page - 1 %>" class="btn-small">← Newer</a>
+      <% } %>
+      <span class="page-indicator">Page <%= page %> of <%= totalPages %></span>
+      <% if (page < totalPages) { %>
+        <a href="/?page=<%= page + 1 %>" class="btn-small">Older →</a>
+      <% } %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

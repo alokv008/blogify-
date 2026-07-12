@@ -1,0 +1,33 @@
+<%- include('partials/head') %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <div class="dashboard-header">
+    <h1>My posts</h1>
+    <a href="/blogs/new" class="btn">+ New post</a>
+  </div>
+
+  <% if (blogs.length === 0) { %>
+    <p class="empty-state">You haven't written anything yet. <a href="/blogs/new">Write your first post →</a></p>
+  <% } else { %>
+    <div class="dashboard-list">
+      <% blogs.forEach(function(blog) { %>
+        <div class="dashboard-item">
+          <div>
+            <h3><a href="/blogs/<%= blog._id %>"><%= blog.title %></a></h3>
+            <p class="blog-meta"><%= new Date(blog.createdAt).toLocaleDateString() %></p>
+          </div>
+          <div class="dashboard-actions">
+            <a href="/blogs/<%= blog._id %>/edit" class="btn-small">Edit</a>
+            <form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST" class="inline-form"
+                  onsubmit="return confirm('Delete this post? This cannot be undone.');">
+              <button type="submit" class="link-button danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
